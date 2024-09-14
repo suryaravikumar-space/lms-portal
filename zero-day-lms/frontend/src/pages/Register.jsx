@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Container, Alert, AlertTitle } from "@mui/material";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Add this for navigation
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ const Register = () => {
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate(); 
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,7 +29,6 @@ const Register = () => {
 
     try {
       const response = await axios.post("/api/users/register", formData);
-      
       console.log(response.data);
       setSuccess(true);
     } catch (error) {
@@ -36,22 +37,27 @@ const Register = () => {
     }
   };
 
+  const handleLoginClick = () => {
+    navigate("/login"); 
+  };
+
   return (
     <Container>
       <h2>Register</h2>
       {success && (
         <Alert severity="success">
           <AlertTitle>Success</AlertTitle>
-          {}
+          Registered successfully!
         </Alert>
       )}
 
       {error && (
-            <Alert severity="error">
-                <AlertTitle>Error</AlertTitle>
-                {error}
-            </Alert>
-        )}
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {error}
+        </Alert>
+      )}
+
       <form onSubmit={handleSubmit}>
         <TextField
           label="First Name"
@@ -99,6 +105,14 @@ const Register = () => {
           Register
         </Button>
       </form>
+      <p>Already have an account?</p>
+      <Button
+        variant="contained" 
+        color="primary"
+        onClick={handleLoginClick}
+      >
+        Login
+      </Button>
     </Container>
   );
 };
